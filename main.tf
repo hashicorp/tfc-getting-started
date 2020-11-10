@@ -2,10 +2,10 @@
 # For more information, see https://www.terraform.io/docs/backends/types/remote.html
 terraform {
   backend "remote" {
-    organization = "$ORGANIZATION"
+    organization = "{{ORGANIZATION_NAME}}"
 
     workspaces {
-      name = "$WORKSPACE"
+      name = "{{WORKSPACE_NAME}}"
     }
   }
 }
