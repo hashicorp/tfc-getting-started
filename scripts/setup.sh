@@ -1,36 +1,28 @@
 #! /bin/bash
 set -euo pipefail
 
-info () {
+info() {
   printf "\r\033[00;35m$1\033[0m\n"
 }
 
-success () {
+success() {
   printf "\r\033[00;32m$1\033[0m\n"
 }
 
-fail () {
+fail() {
   printf "\r\033[0;31m$1\033[0m\n"
 }
 
 # This setup script does all the magic.
 
 # Check for required tools
-declare -a req_tools=("terraform" "sed" "curl")
+declare -a req_tools=("terraform" "sed" "curl" "jq")
 for tool in "${req_tools[@]}"; do
   if ! command -v "$tool" > /dev/null; then
     fail "It looks like '${tool}' is not installed; please install it and run this setup script again."
     exit 1
   fi
 done
-
-# Check that we've already authenticated via Terraform
-CREDENTIALS_FILE="$HOME/.terraform.d/credentials.tfrc.json"
-if [[ ! -f $CREDENTIALS_FILE ]]; then
-  fail "It looks like the Terraform credentials file at $CREDENTIALS_FILE does not exist."
-  fail "Please run 'terraform login', then run this setup script again."
-  exit 1
-fi
 
 echo ""
 info "Welcome to Terraform Cloud!"
@@ -39,30 +31,37 @@ echo ""
 
 # Set up some variables we'll need
 HOST="${1:-app.terraform.io}"
-TOKEN=$(jq -j --arg h "$HOST" '.credentials[$h].token' $CREDENTIALS_FILE)
 MAIN_TF=$(dirname ${BASH_SOURCE[0]})/../main.tf
 organization_name="sandbox-$RANDOM"
 workspace_name="tfc-getting-started"
 
+# Check that we've already authenticated via Terraform
+CREDENTIALS_FILE="$HOME/.terraform.d/credentials.tfrc.json"
+TOKEN=$(jq -j --arg h "$HOST" '.credentials[$h].token' $CREDENTIALS_FILE)
+if [[ ! -f $CREDENTIALS_FILE || $TOKEN == null ]]; then
+  fail "We couldn't find a token in the Terraform credentials file at $CREDENTIALS_FILE."
+  fail "Please run 'terraform login', then run this setup script again."
+  exit 1
+fi
+
 # Retrieve the user's account info (specifically, their email address)
 echo "Retrieving your account info..."
-get-account () {
+get-account() {
   curl https://$HOST/api/v2/account/details \
     --silent \
     --header "Content-Type: application/vnd.api+json" \
     --header "Authorization: Bearer $TOKEN"
 }
 
-account=$(get-account)
-email=$(jq -r '.data.attributes.email' <<< $account)
-if [[ -z "$email" ]]; then
+email=$(get-account | jq -r '.data.attributes.email')
+if [[ $email == null ]]; then
   fail "We couldn't retrieve your account information from Terraform Cloud."
   exit 1
 fi
 
 # Create a Terraform Cloud organization
 echo "Creating an organization..."
-create-org () {
+create-org() {
   curl https://$HOST/api/v2/organizations \
     --request POST \
     --silent \
@@ -81,17 +80,15 @@ create-org () {
 REQUEST_BODY
 }
 
-org_response=$(create-org)
-check_org_status=$(jq -r '.data.attributes.name' <<< $org_response)
-
-if [[ -z "$check_org_status" ]]; then
+check_org_status=$(create-org | jq -r '.data.attributes.name')
+if [[ $check_org_status == null ]]; then
   fail "We were unable to create a Terraform Cloud organization."
   exit 1
 fi
 
 # Create a Terraform Cloud workspace
 echo "Creating a workspace..."
-create-workspace () {
+create-workspace() {
   curl https://$HOST/api/v2/organizations/$organization_name/workspaces \
     --request POST \
     --silent \
@@ -109,19 +106,18 @@ create-workspace () {
 REQUEST_BODY
 }
 
-workspace_response=$(create-workspace)
-check_workspace_status=$(jq -r '.data.attributes.name' <<< $workspace_response)
-
-if [[ -z "$check_workspace_status" ]]; then
+check_workspace_status=$(create-workspace | jq -r '.data.attributes.name')
+if [[ $check_workspace_status == null ]]; then
   fail "We were unable to create a Terraform Cloud workspace."
   exit 1
 fi
 
+echo "Wrapping up..."
 # We don't sed -i because MacOS's sed has problems with it.
 TEMP=$(mktemp)
-cat $MAIN_TF \
-    | sed "s/{{ORGANIZATION_NAME}}/${organization_name}/" \
-    | sed "s/{{WORKSPACE_NAME}}/${workspace_name}/" \
+cat $MAIN_TF |
+  sed "s/{{ORGANIZATION_NAME}}/${organization_name}/" |
+  sed "s/{{WORKSPACE_NAME}}/${workspace_name}/" \
     > $TEMP
 mv $TEMP $MAIN_TF
 
