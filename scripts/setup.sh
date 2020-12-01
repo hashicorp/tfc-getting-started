@@ -50,7 +50,8 @@ get-account() {
   curl https://$HOST/api/v2/account/details \
     --silent \
     --header "Content-Type: application/vnd.api+json" \
-    --header "Authorization: Bearer $TOKEN"
+    --header "Authorization: Bearer $TOKEN" \
+    --header "User-Agent: tfc-getting-started"
 }
 
 email=$(get-account | jq -r '.data.attributes.email')
@@ -67,6 +68,7 @@ create-org() {
     --silent \
     --header "Content-Type: application/vnd.api+json" \
     --header "Authorization: Bearer $TOKEN" \
+    --header "User-Agent: tfc-getting-started" \
     --data @- << REQUEST_BODY
 {
 	"data": {
@@ -94,6 +96,7 @@ create-workspace() {
     --silent \
     --header "Content-Type: application/vnd.api+json" \
     --header "Authorization: Bearer $TOKEN" \
+    --header "User-Agent: tfc-getting-started" \
     --data @- << REQUEST_BODY
 {
 	"data": {
