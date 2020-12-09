@@ -61,7 +61,7 @@ read -n 1 -p "Continue? (y/n): " confirm && [[ $confirm == [yY] || $confirm == [
 echo
 echo "Creating an organization and workspace..."
 setup() {
-  curl https://$HOST/api/v2/getting-started/setup \
+  curl https://$HOST/api/getting-started/setup \
     --request POST \
     --silent \
     --header "Content-Type: application/vnd.api+json" \
