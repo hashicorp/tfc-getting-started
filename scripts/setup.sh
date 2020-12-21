@@ -13,6 +13,25 @@ fail() {
   printf "\r\033[0;31m$1\033[0m\n"
 }
 
+pause_for_confirmation() {
+  read -rsp $'Press any key to continue (ctrl-c to quit):\n' -n1 key
+}
+
+# Set up an interrupt handler so we can exit gracefully
+interrupt_count=0
+interrupt_handler() {
+  ((interrupt_count += 1))
+
+  echo ""
+  if [[ $interrupt_count -eq 1 ]]; then
+    fail "Really quit? Hit ctrl-c again to confirm."
+  else
+    echo "Goodbye!"
+    exit
+  fi
+}
+trap interrupt_handler SIGINT SIGTERM
+
 # This setup script does all the magic.
 
 # Check for required tools
@@ -54,8 +73,7 @@ echo
 info "This script will set up everything you need to get started. You'll be
 applying some example infrastructure - for free - in less than a minute."
 echo
-read -n 1 -p "Continue? (y/n): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
-
+pause_for_confirmation
 
 # Create a Terraform Cloud organization
 echo
@@ -120,7 +138,7 @@ echo "Next, we'll run 'terraform init' to initialize the backend and providers:"
 echo
 echo "$ terraform init"
 echo
-read -n 1 -p "Continue? (y/n): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
+pause_for_confirmation
 
 echo
 terraform init # Todo exit if this fails
@@ -128,7 +146,7 @@ terraform init # Todo exit if this fails
 echo
 echo "$ terraform plan"
 echo
-read -n 1 -p "Continue? (y/n): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
+pause_for_confirmation
 
 echo
 terraform plan # Todo exit if this fails
@@ -156,7 +174,7 @@ echo "To actually make changes, we'll run 'terraform apply':"
 echo
 echo "$ terraform apply"
 echo
-read -n 1 -p "Continue? (y/n): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] || exit 1
+pause_for_confirmation
 
 echo
 terraform apply #TODO exit if this fails and/or the user didn't confirm the plan
