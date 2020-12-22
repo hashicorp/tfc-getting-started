@@ -204,6 +204,6 @@ echo "  * Easily share and reuse Terraform code with the private module registry
 echo "  * A rich API for nearly all Terraform Cloud features, enabling deep integrations."
 echo
 info "To see the mock infrastructure you just provisioned and continue exploring Terraform Cloud,
-visit: <link to FWS console>" # TODO: add the actual link
+visit: https://$HOST/fake-web-services" # TODO: add the actual link
 echo
 exit 0
