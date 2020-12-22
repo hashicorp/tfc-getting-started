@@ -2,21 +2,39 @@
 # For more information, see https://www.terraform.io/docs/backends/types/remote.html
 terraform {
   backend "remote" {
+    hostname = "YOURSUBDOMAIN.ngrok.io" # This is only required for the demo
+
     organization = "{{ORGANIZATION_NAME}}"
 
     workspaces {
       name = "{{WORKSPACE_NAME}}"
     }
   }
-}
 
-resource "random_pet" "animal" {
-  keepers = {
-    uuid = uuid() # Force a new name each time
+  # This block is only required for the demo
+  required_providers {
+    fakewebservices = "1.0"
   }
-  length = 3
 }
 
-output "random" {
-  value = random_pet.animal.id
+variable "hostname" {
+  type = string
+}
+
+variable "provider_token" {
+  type = string
+  sensitive = true
+}
+
+provider "fakewebservices" {
+  hostname = var.hostname # This argument is only required for the demo
+  token = var.provider_token
+}
+
+resource "fakewebservices_server" "server" {
+  name = "my-demo-server"
+}
+
+output "server_name" {
+  value = fakewebservices_server.server.name
 }

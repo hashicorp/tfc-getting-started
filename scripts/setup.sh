@@ -25,7 +25,7 @@ for tool in "${req_tools[@]}"; do
 done
 
 # Set up some variables we'll need
-HOST="${1:-app.terraform.io}"
+HOST="${1:-YOURSUBDOMAIN.ngrok.io}"
 MAIN_TF=$(dirname ${BASH_SOURCE[0]})/../main.tf
 
 # Check that we've already authenticated via Terraform in the static credentials
