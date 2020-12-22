@@ -13,6 +13,10 @@ fail() {
   printf "\r\033[0;31m$1\033[0m\n"
 }
 
+divider() {
+  printf "\r\033[0;1m========================================================================\033[0m\n"
+}
+
 pause_for_confirmation() {
   read -rsp $'Press any key to continue (ctrl-c to quit):\n' -n1 key
 }
@@ -64,20 +68,21 @@ fi
 echo
 info "Welcome to Terraform Cloud!"
 echo
-echo "Terraform Cloud is a platform that performs Terraform runs to provision
-infrastructure, either on demand or in response to various events. Unlike a
-general-purpose continuous integration (CI) system, it is deeply integrated with
-Terraform's workflows and data, which allows it to make Terraform significantly
-more convenient and powerful."
+echo "Terraform Cloud offers secure, easy-to-use remote state management and allows
+you to run Terraform remotely in a controlled environment. Terraform Cloud runs can be
+performed on demand or triggered automatically by various events."
 echo
 info "This script will set up everything you need to get started. You'll be
 applying some example infrastructure - for free - in less than a minute."
+echo
+info "First, we'll do some setup and configure Terraform to use Terraform Cloud."
 echo
 pause_for_confirmation
 
 # Create a Terraform Cloud organization
 echo
 echo "Creating an organization and workspace..."
+sleep 1
 setup() {
   curl https://$HOST/api/getting-started/setup \
     --request POST \
@@ -118,6 +123,7 @@ workspace_name=$(echo $response | jq -r '.data."workspace-name"')
 
 echo
 echo "Writing remote backend configuration to main.tf..."
+sleep 1
 
 # We don't sed -i because MacOS's sed has problems with it.
 TEMP=$(mktemp)
@@ -128,13 +134,15 @@ cat $MAIN_TF |
 mv $TEMP $MAIN_TF
 
 echo
-success "Ready to go; the example configuration is set to use Terraform Cloud as a remote backend!"
+divider
+echo
+success "Ready to go; the example configuration is set up to use Terraform Cloud!"
 echo
 echo "An example workspace named '${workspace_name}' was created for you."
 echo "You can view this workspace in the Terraform Cloud UI here:"
 echo "https://$HOST/app/${organization_name}/workspaces/${workspace_name}"
 echo
-echo "Next, we'll run 'terraform init' to initialize the backend and providers:"
+info "Next, we'll run 'terraform init' to initialize the backend and providers:"
 echo
 echo "$ terraform init"
 echo
@@ -142,7 +150,10 @@ pause_for_confirmation
 
 echo
 terraform init # Todo exit if this fails
-
+echo
+divider
+echo
+info "Now it’s time for 'terraform plan', to see what changes Terraform will perform:"
 echo
 echo "$ terraform plan"
 echo
@@ -150,61 +161,49 @@ pause_for_confirmation
 
 echo
 terraform plan # Todo exit if this fails
-
 echo
-success "The plan is complete! You can view what changes Terraform needs to perform
-above. Note this is just an example, and the infrastructure here is totally
-free."
+divider
 echo
-echo "Terraform Cloud runs Terraform on disposable virtual machines in its own
-cloud infrastructure. Remote Terraform execution is sometimes referred to as
-\"remote operations.\""
+success "The plan is complete! You can view what changes Terraform needs to perform above."
 echo
-echo "The plan above was initiated from your local machine, but executed within
-Terraform Cloud! Remote execution helps provide consistency and visibility for
+echo "This plan was initiated from your local machine, but executed within
+Terraform Cloud! Terraform Cloud runs Terraform on disposable virtual machines in
+its own cloud infrastructure."
+echo
+echo "This 'remote execution' helps provide consistency and visibility for
 critical provisioning operations. It also enables powerful features like
 Sentinel policy enforcement and cost estimation (shown in the output above),
 notifications, version control integration, and more."
 echo
-echo "A plan phase by itself is called a 'speculative plan' in Terraform Cloud.
-It's for a read-only view of the difference between your configuration and the real
-world"
+info "To actually make changes, we'll run 'terraform apply'. We'll also auto-approve the
+result, since this is an example:"
 echo
-echo "To actually make changes, we'll run 'terraform apply':"
-echo
-echo "$ terraform apply"
+echo "$ terraform apply -auto-approve"
 echo
 pause_for_confirmation
 
 echo
-terraform apply #TODO exit if this fails and/or the user didn't confirm the plan
+terraform apply -auto-approve #TODO exit if this fails
 
 echo
-success "You did it! You just applied a run in Terraform Cloud!"
+divider
 echo
-echo "Remember, you can view this workspace and the plan/apply operations we just
-executed in the Terraform Cloud UI here: https://$HOST/app/${organization_name}/workspaces/${workspace_name}"
+success "You did it! You just provisioned infrastructure with Terraform Cloud!"
 echo
 info "The organization we created here has a 30-day free trial of the Team &
-Governance tier features. Please feel free to continue to evaluate Terraform
-Cloud with this workspace and configuration, however you wish!"
-echo
-echo "After the trial has ended, the organization will continue to be available
-with Free tier features: https://www.terraform.io/docs/cloud/paid.html"
+Governance tier features. After the trial ends, you'll be moved to the Free tier."
 
-echo "This example configuration is only a small fraction of what Terraform Cloud offers:"
-echo "  * Team-oriented remote execution and permissions system"
-echo "  * Workspaces for organization infrastructure"
-echo "  * Remote State Management, Data Sharing, and Run Triggers"
-echo "  * Version Control Integration"
-echo "  * Private Module Registry"
-echo "  * Policy-as-Code with HashiCorp Sentinel"
-echo "  * Cost Estimation"
-echo "  * Terraform Cloud Agents for provisioning to private/on-premises infrastructure"
-echo "  * A rich API for nearly all Terraform Cloud features - allowing deep
-          integrations. There's even a Terraform provider for the API, allowing you to
-          manage Terraform Cloud as a Terraform configuration."
-echo "  * And more."
 echo
-echo "For more information, visit https://www.terraform.io/docs/cloud/overview.html"
+echo "This example configuration showcases only a small fraction of what Terraform Cloud offers.
+Additional features include:"
+echo "  * Workspaces for organizing your infrastructure."
+echo "  * Remote state management, with the ability to share outputs across workspaces."
+echo "  * Automatically trigger Terraform runs whenever you push to a connected repository,"
+echo "    or use custom run triggers to create powerful automation pipelines."
+echo "  * Easily share and reuse Terraform code with the private module registry."
+echo "  * A rich API for nearly all Terraform Cloud features, enabling deep integrations."
+echo
+info "To see the mock infrastructure you just provisioned and continue exploring Terraform Cloud,
+visit: <link to FWS console>" # TODO: add the actual link
+echo
 exit 0
