@@ -149,7 +149,7 @@ echo
 pause_for_confirmation
 
 echo
-terraform init # Todo exit if this fails
+terraform init
 echo
 divider
 echo
@@ -160,7 +160,7 @@ echo
 pause_for_confirmation
 
 echo
-terraform plan # Todo exit if this fails
+terraform plan
 echo
 divider
 echo
@@ -183,7 +183,7 @@ echo
 pause_for_confirmation
 
 echo
-terraform apply -auto-approve #TODO exit if this fails
+terraform apply -auto-approve
 
 echo
 divider
@@ -204,6 +204,6 @@ echo "  * Easily share and reuse Terraform code with the private module registry
 echo "  * A rich API for nearly all Terraform Cloud features, enabling deep integrations."
 echo
 info "To see the mock infrastructure you just provisioned and continue exploring Terraform Cloud,
-visit: https://$HOST/fake-web-services" # TODO: add the actual link
+visit: https://$HOST/fake-web-services"
 echo
 exit 0
