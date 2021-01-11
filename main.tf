@@ -36,3 +36,19 @@ resource "fakewebservices_database" "prod_db" {
   name = "Production DB"
   size = 256
 }
+
+module "backend" {
+  source   = "./backend"
+  token    = var.token
+  hostname = var.hostname
+}
+
+output "organization" {
+  description = "Name of the org"
+  value       = module.backend.organization
+}
+
+output "workspace" {
+  description = "Name of the workspace"
+  value       = module.backend.workspace
+}
