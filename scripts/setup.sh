@@ -128,6 +128,11 @@ sleep 1
 # We don't sed -i because MacOS's sed has problems with it.
 TEMP=$(mktemp)
 cat $MAIN_TF |
+  # add config for the hostname if necessary
+  if [[ "$HOST" != "app.terraform.io" ]]; then sed "5a\\
+\    hostname = \"$HOST\"
+    "; else cat; fi |
+  # replace the organization and workspace names
   sed "s/{{ORGANIZATION_NAME}}/${organization_name}/" |
   sed "s/{{WORKSPACE_NAME}}/${workspace_name}/" \
     > $TEMP
