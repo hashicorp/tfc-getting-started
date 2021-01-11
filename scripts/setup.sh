@@ -65,6 +65,19 @@ if [[ ! -f $CREDENTIALS_FILE || $TOKEN == null ]]; then
   exit 1
 fi
 
+# Check that this is your first time running this script. If not, we'll reset
+# all local state and restart from scratch!
+if [[ $(git diff --stat) != '' ]]; then
+  echo "It looks like you've run this script before! Before continuing, we'll need to
+  reset everything to its original state, including any changes you've made to main.tf."
+  echo
+  pause_for_confirmation
+
+  git checkout HEAD main.tf
+  rm -rf .terraform
+  rm -f *.lock.hcl
+fi
+
 echo
 info "Welcome to Terraform Cloud!"
 echo
