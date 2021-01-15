@@ -47,10 +47,20 @@ for tool in "${req_tools[@]}"; do
   fi
 done
 
+# Check for required Terraform version
+if ! terraform version -json | jq -r '.terraform_version' &> /dev/null; then
+  echo
+  fail "Terraform 0.13 or later is required for this setup script!"
+  echo "You are currently running:"
+  terraform version
+  exit 1
+fi
+
 # Set up some variables we'll need
 HOST="${1:-app.terraform.io}"
 BACKEND_TF=$(dirname ${BASH_SOURCE[0]})/../backend.tf
 PROVIDER_TF=$(dirname ${BASH_SOURCE[0]})/../provider.tf
+TERRAFORM_VERSION=$(terraform version -json | jq -r '.terraform_version')
 
 # Check that we've already authenticated via Terraform in the static credentials
 # file.  Note that if you configure your token via a credentials helper or any
@@ -126,7 +136,8 @@ setup() {
     --header "User-Agent: tfc-getting-started" \
     --data @- << REQUEST_BODY
 {
-	"workflow": "remote-operations"
+	"workflow": "remote-operations",
+  "terraform-version": "$TERRAFORM_VERSION"
 }
 REQUEST_BODY
 }
