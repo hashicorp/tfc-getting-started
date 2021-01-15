@@ -79,11 +79,31 @@ if [[ $(git diff --stat) != '' ]]; then
 fi
 
 echo
-info "Welcome to Terraform Cloud!"
+printf "\r\033[00;35;1m
+--------------------------------------------------------------------------
+                                         -
+Welcome to Terraform Cloud               -----                           -
+                                         ---------                      --
+                                         ---------  -                -----
+                                          ---------  ------        -------
+                                            -------  ---------  ----------
+                                               ----  ---------- ----------
+                                                 --  ---------- ----------
+                                                  -  ---------- -------
+                                                     ---  ----- ---
+                                                     --------   -
+                                                     ----------
+                                                     ----------
+                                                      ---------
+                                                          -----
+                                                              -
+
+-------------------------------------------------------------------------\033[0m"
+echo
 echo
 echo "Terraform Cloud offers secure, easy-to-use remote state management and allows
-you to run Terraform remotely in a controlled environment. Terraform Cloud runs can be
-performed on demand or triggered automatically by various events."
+you to run Terraform remotely in a controlled environment. Terraform Cloud runs
+can be performed on demand or triggered automatically by various events."
 echo
 info "This script will set up everything you need to get started. You'll be
 applying some example infrastructure - for free - in less than a minute."
@@ -182,19 +202,19 @@ terraform plan
 echo
 divider
 echo
-success "The plan is complete! You can view what changes Terraform needs to perform above."
+success "The plan is complete!"
 echo
 echo "This plan was initiated from your local machine, but executed within
-Terraform Cloud! Terraform Cloud runs Terraform on disposable virtual machines in
-its own cloud infrastructure."
+Terraform Cloud!"
 echo
-echo "This 'remote execution' helps provide consistency and visibility for
-critical provisioning operations. It also enables powerful features like
-Sentinel policy enforcement and cost estimation (shown in the output above),
-notifications, version control integration, and more."
+echo "Terraform Cloud runs Terraform on disposable virtual machines in
+its own cloud infrastructure. This 'remote execution' helps provide consistency
+and visibility for critical provisioning operations. It also enables notifications,
+version control integration, and powerful features like Sentinel policy enforcement
+and cost estimation (shown in the output above)."
 echo
-info "To actually make changes, we'll run 'terraform apply'. We'll also auto-approve the
-result, since this is an example:"
+info "To actually make changes, we'll run 'terraform apply'. We'll also auto-approve
+the result, since this is an example:"
 echo
 echo "$ terraform apply -auto-approve"
 echo
@@ -210,18 +230,21 @@ success "You did it! You just provisioned infrastructure with Terraform Cloud!"
 echo
 info "The organization we created here has a 30-day free trial of the Team &
 Governance tier features. After the trial ends, you'll be moved to the Free tier."
-
 echo
-echo "This example configuration showcases only a small fraction of what Terraform Cloud offers.
-Additional features include:"
-echo "  * Workspaces for organizing your infrastructure."
-echo "  * Remote state management, with the ability to share outputs across workspaces."
-echo "  * Automatically trigger Terraform runs whenever you push to a connected repository,"
-echo "    or use custom run triggers to create powerful automation pipelines."
-echo "  * Easily share and reuse Terraform code with the private module registry."
-echo "  * A rich API for nearly all Terraform Cloud features, enabling deep integrations."
+echo "You now have:"
 echo
-info "To see the mock infrastructure you just provisioned and continue exploring Terraform Cloud,
-visit: https://$HOST/fake-web-services"
+echo "  * Workspaces for organizing your infrastructure. Terraform Cloud manages"
+echo "    infrastructure collections with workspaces instead of directories. You"
+echo "    can view your workspace here:"
+echo "    https://$HOST/app/$organization_name/workspaces/$workspace_name"
+echo "  * Remote state management, with the ability to share outputs across"
+echo "    workspaces. We've set up state management for you in your current"
+echo "    workspace, and you can reference state from other workspaces using"
+echo "    the 'terraform_remote_state' data source."
+echo "  * Much more!"
+echo
+info "To see the mock infrastructure you just provisioned and continue exploring
+Terraform Cloud, visit:
+https://$HOST/fake-web-services"
 echo
 exit 0
