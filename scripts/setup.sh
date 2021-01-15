@@ -49,7 +49,8 @@ done
 
 # Set up some variables we'll need
 HOST="${1:-app.terraform.io}"
-MAIN_TF=$(dirname ${BASH_SOURCE[0]})/../main.tf
+BACKEND_TF=$(dirname ${BASH_SOURCE[0]})/../backend.tf
+PROVIDER_TF=$(dirname ${BASH_SOURCE[0]})/../provider.tf
 
 # Check that we've already authenticated via Terraform in the static credentials
 # file.  Note that if you configure your token via a credentials helper or any
@@ -68,12 +69,12 @@ fi
 # Check that this is your first time running this script. If not, we'll reset
 # all local state and restart from scratch!
 if [[ $(git diff --stat) != '' ]]; then
-  echo "It looks like you've run this script before! Before continuing, we'll need to
-  reset everything to its original state, including any changes you've made to main.tf."
+  echo "It looks like you may have run this script before! Re-running it will reset any
+  changes you've made to backend.tf and provider.tf."
   echo
   pause_for_confirmation
 
-  git checkout HEAD main.tf
+  git checkout HEAD backend.tf provider.tf
   rm -rf .terraform
   rm -f *.lock.hcl
 fi
@@ -155,13 +156,13 @@ organization_name=$(echo $response | jq -r '.data."organization-name"')
 workspace_name=$(echo $response | jq -r '.data."workspace-name"')
 
 echo
-echo "Writing remote backend configuration to main.tf..."
+echo "Writing remote backend configuration to backend.tf..."
 sleep 1
 
 # We don't sed -i because MacOS's sed has problems with it.
 TEMP=$(mktemp)
-cat $MAIN_TF |
-  # add config for the hostname if necessary
+cat $BACKEND_TF |
+  # add backend config for the hostname if necessary
   if [[ "$HOST" != "app.terraform.io" ]]; then sed "5a\\
 \    hostname = \"$HOST\"
     "; else cat; fi |
@@ -169,7 +170,22 @@ cat $MAIN_TF |
   sed "s/{{ORGANIZATION_NAME}}/${organization_name}/" |
   sed "s/{{WORKSPACE_NAME}}/${workspace_name}/" \
     > $TEMP
-mv $TEMP $MAIN_TF
+mv $TEMP $BACKEND_TF
+
+# add extra provider config for the hostname if necessary
+if [[ "$HOST" != "app.terraform.io" ]]; then
+  TEMP=$(mktemp)
+  cat $PROVIDER_TF |
+    sed "11a\\
+  \  hostname = var.provider_hostname
+      " \
+      > $TEMP
+  echo "
+variable \"provider_hostname\" {
+  type = string
+}" >> $TEMP
+  mv $TEMP $PROVIDER_TF
+fi
 
 echo
 divider

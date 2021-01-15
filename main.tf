@@ -1,17 +1,6 @@
-# The block below configures Terraform to use the 'remote' backend with Terraform Cloud.
-# For more information, see https://www.terraform.io/docs/backends/types/remote.html
-terraform {
-  backend "remote" {
-    organization = "{{ORGANIZATION_NAME}}"
-
-    workspaces {
-      name = "{{WORKSPACE_NAME}}"
-    }
-  }
-}
-
 # The following configuration uses a provider which provisions [fake] resources
-# to a ficiticious cloud vendor called "Fake Web Services".
+# to a fictitious cloud vendor called "Fake Web Services". Configuration for
+# the fakewebservices provider can be found in provider.tf.
 #
 # After running the setup script (./scripts/setup.sh), feel free to change these
 # resources and 'terraform apply' as much as you'd like! These resources are
@@ -20,18 +9,10 @@ terraform {
 #
 # To review the provider and documentation for the available resources and
 # schemas, see: https://registry.terraform.io/providers/hashicorp/fakewebservices
+#
+# If you're looking for the configuration for the remote backend, you can find that
+# in backend.tf.
 
-# The following variable is used to configure the provider's authentication
-# token You don't need to provide a token on the command line to apply changes,
-# though: using the remote backend, Terraform will execute remotely in Terraform
-# Cloud where your token is already securely stored in your workspace!
-variable "provider_token" {
-  type = string
-}
-
-provider "fakewebservices" {
-  token = var.provider_token
-}
 
 resource "fakewebservices_vpc" "primary_vpc" {
   name       = "Primary VPC"
