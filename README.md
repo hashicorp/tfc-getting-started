@@ -12,10 +12,10 @@ This repo contains two main things:
 ## Requirements
 
 - Terraform 0.13 or higher
-- the ability to run a bash script in your terminal
-- sed
-- curl
-- jq
+- The ability to run a bash script in your terminal
+- [`sed`](https://www.gnu.org/software/sed/)
+- [`curl`](https://curl.se/)
+- [`jq`](https://stedolan.github.io/jq/)
 
 ## Usage
 
