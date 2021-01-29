@@ -92,23 +92,7 @@ fi
 echo
 printf "\r\033[00;35;1m
 --------------------------------------------------------------------------
-                                         -
-Welcome to Terraform Cloud               -----                           -
-                                         ---------                      --
-                                         ---------  -                -----
-                                          ---------  ------        -------
-                                            -------  ---------  ----------
-                                               ----  ---------- ----------
-                                                 --  ---------- ----------
-                                                  -  ---------- -------
-                                                     ---  ----- ---
-                                                     --------   -
-                                                     ----------
-                                                     ----------
-                                                      ---------
-                                                          -----
-                                                              -
-
+Getting Started with Terraform Cloud
 -------------------------------------------------------------------------\033[0m"
 echo
 echo
@@ -116,7 +100,7 @@ echo "Terraform Cloud offers secure, easy-to-use remote state management and all
 you to run Terraform remotely in a controlled environment. Terraform Cloud runs
 can be performed on demand or triggered automatically by various events."
 echo
-info "This script will set up everything you need to get started. You'll be
+echo "This script will set up everything you need to get started. You'll be
 applying some example infrastructure - for free - in less than a minute."
 echo
 info "First, we'll do some setup and configure Terraform to use Terraform Cloud."
