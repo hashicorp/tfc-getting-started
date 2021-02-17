@@ -78,7 +78,7 @@ fi
 
 # Check that this is your first time running this script. If not, we'll reset
 # all local state and restart from scratch!
-if [[ $(git diff --stat) != '' ]]; then
+if ! git diff-index --quiet --no-ext-diff HEAD --; then
   echo "It looks like you may have run this script before! Re-running it will reset any
   changes you've made to backend.tf and provider.tf."
   echo
