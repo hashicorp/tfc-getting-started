@@ -152,7 +152,7 @@ workspace_name=$(echo $response | jq -r '.data."workspace-name"')
 
 echo
 echo "Writing remote backend configuration to backend.tf..."
-sleep 1
+sleep 2
 
 # We don't sed -i because MacOS's sed has problems with it.
 TEMP=$(mktemp)
@@ -200,6 +200,9 @@ pause_for_confirmation
 echo
 terraform init
 echo
+echo "..."
+sleep 2
+echo
 divider
 echo
 info "Now it’s time for 'terraform plan', to see what changes Terraform will perform:"
@@ -210,6 +213,9 @@ pause_for_confirmation
 
 echo
 terraform plan
+echo
+echo "..."
+sleep 3
 echo
 divider
 echo
@@ -234,6 +240,9 @@ pause_for_confirmation
 echo
 terraform apply -auto-approve
 
+echo
+echo "..."
+sleep 3
 echo
 divider
 echo
