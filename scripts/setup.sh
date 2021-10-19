@@ -60,7 +60,7 @@ installedTerraformVersion=$(($installedTerraformMajorVersion * 1000 + $installed
 # Check we meet the minimum required version
 if [ $installedTerraformVersion -lt $minimumTerraformVersion ]; then
   echo
-  fail "Terraform 0.$minimumTerraformVersion.x or later is required for this setup script!"
+  fail "Terraform $minimumTerraformMajorVersion.$minimumTerraformMinorVersion.x or later is required for this setup script!"
   echo "You are currently running:"
   terraform version
   exit 1
