@@ -127,15 +127,15 @@ REQUEST_BODY
 }
 
 response=$(setup)
+err=$(echo $response | jq -r '.errors')
 
-if [[ $(echo $response | jq -r '.errors') != null ]]; then
-  fail "An unknown error occurred: ${response}"
-  exit 1
-fi
-
-api_error=$(echo $response | jq -r '.error')
-if [[ $api_error != null ]]; then
-  fail "\n${api_error}"
+if [[ $err != null ]]; then
+  err_msg=$(echo $err | jq -r '.[0].detail')
+  if [[ $err_msg != null ]]; then
+    fail "An error occurred: ${err_msg}"
+  else 
+    fail "An unknown error occurred: ${err}"
+  fi
   exit 1
 fi
 
