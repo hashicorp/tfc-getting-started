@@ -47,10 +47,20 @@ for tool in "${req_tools[@]}"; do
   fi
 done
 
-# Check for required Terraform version
-if ! terraform version -json | jq -r '.terraform_version' &> /dev/null; then
+# Get the minimum required version of Terraform
+minimumTerraformMajorVersion=0
+minimumTerraformMinorVersion=14
+minimumTerraformVersion=$(($minimumTerraformMajorVersion * 1000 + $minimumTerraformMinorVersion))
+
+# Get the current version of Terraform
+installedTerraformMajorVersion=$(terraform version -json | jq -r '.terraform_version' | cut -d '.' -f 1)
+installedTerraformMinorVersion=$(terraform version -json | jq -r '.terraform_version' | cut -d '.' -f 2)
+installedTerraformVersion=$(($installedTerraformMajorVersion * 1000 + $installedTerraformMinorVersion))
+
+# Check we meet the minimum required version
+if [ $installedTerraformVersion -lt $minimumTerraformVersion ]; then
   echo
-  fail "Terraform 0.13 or later is required for this setup script!"
+  fail "Terraform $minimumTerraformMajorVersion.$minimumTerraformMinorVersion.x or later is required for this setup script!"
   echo "You are currently running:"
   terraform version
   exit 1

@@ -11,7 +11,7 @@ This repo contains two main things:
 
 ## Requirements
 
-- Terraform 0.13 or higher
+- Terraform 0.14 or higher
 - The ability to run a bash script in your terminal
 - [`sed`](https://www.gnu.org/software/sed/)
 - [`curl`](https://curl.se/)
