@@ -69,7 +69,7 @@ TERRAFORM_VERSION=$(terraform version -json | jq -r '.terraform_version')
 # and you hopefully do not need this Getting Started project if you're using one
 # already!
 CREDENTIALS_FILE="$HOME/.terraform.d/credentials.tfrc.json"
-TOKEN=$(jq -j --arg h "$HOST" '.credentials[$h].token' $CREDENTIALS_FILE)
+TOKEN=$(jq -j --arg h "$HOST" '.credentials[$h].token' "$CREDENTIALS_FILE")
 if [[ ! -f $CREDENTIALS_FILE || $TOKEN == null ]]; then
   fail "We couldn't find a token in the Terraform credentials file at $CREDENTIALS_FILE."
   fail "Please run 'terraform login', then run this setup script again."
