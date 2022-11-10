@@ -78,7 +78,14 @@ TERRAFORM_VERSION=$(terraform version -json | jq -r '.terraform_version')
 # account - but we do this to avoid embedding a Go binary in this simple script
 # and you hopefully do not need this Getting Started project if you're using one
 # already!
-CREDENTIALS_FILE="$HOME/.terraform.d/credentials.tfrc.json"
+CREDS_FOLDER="$HOME/."
+
+# Credentials are located in App/Data/Roaming on Windows
+if [[ "$OSTYPE" =~ ^msys ]]; then
+    CREDS_FOLDER="$APPDATA/"
+fi
+
+CREDENTIALS_FILE="${CREDS_FOLDER}terraform.d/credentials.tfrc.json"
 TOKEN=$(jq -j --arg h "$HOST" '.credentials[$h].token' "$CREDENTIALS_FILE")
 if [[ ! -f $CREDENTIALS_FILE || $TOKEN == null ]]; then
   fail "We couldn't find a token in the Terraform credentials file at $CREDENTIALS_FILE."
