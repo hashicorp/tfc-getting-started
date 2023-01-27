@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # The following configuration uses a provider which provisions [fake] resources
 # to a fictitious cloud vendor called "Fake Web Services". Configuration for
 # the fakewebservices provider can be found in provider.tf.
