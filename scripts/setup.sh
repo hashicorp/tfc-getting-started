@@ -170,7 +170,7 @@ organization_name=$(echo $response | jq -r '.data."organization-name"')
 workspace_name=$(echo $response | jq -r '.data."workspace-name"')
 
 echo
-echo "Writing remote backend configuration to backend.tf..."
+echo "Writing Terraform Cloud configuration to backend.tf..."
 sleep 2
 
 # We don't sed -i because MacOS's sed has problems with it.
