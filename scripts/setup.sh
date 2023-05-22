@@ -176,7 +176,8 @@ sleep 2
 # We don't sed -i because MacOS's sed has problems with it.
 TEMP=$(mktemp)
 cat $BACKEND_TF |
-  # add backend config for the hostname if necessary
+  # Add the backend config for the hostname if necessary
+  # Note: sed 9a means append the string that follows \\ at line 9 in backend.tf
   if [[ "$HOST" != "app.terraform.io" ]]; then sed "9a\\
 \    hostname = \"$HOST\"
     "; else cat; fi |
@@ -190,6 +191,7 @@ mv $TEMP $BACKEND_TF
 if [[ "$HOST" != "app.terraform.io" ]]; then
   TEMP=$(mktemp)
   cat $PROVIDER_TF |
+  # Note: sed 15a\\ means append the strings that follows the \\ at line 15 in provider.tf
     sed "15a\\
   \  hostname = var.provider_hostname
       " \
