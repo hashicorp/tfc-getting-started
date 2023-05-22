@@ -177,7 +177,7 @@ sleep 2
 TEMP=$(mktemp)
 cat $BACKEND_TF |
   # add backend config for the hostname if necessary
-  if [[ "$HOST" != "app.terraform.io" ]]; then sed "5a\\
+  if [[ "$HOST" != "app.terraform.io" ]]; then sed "9a\\
 \    hostname = \"$HOST\"
     "; else cat; fi |
   # replace the organization and workspace names
@@ -190,7 +190,7 @@ mv $TEMP $BACKEND_TF
 if [[ "$HOST" != "app.terraform.io" ]]; then
   TEMP=$(mktemp)
   cat $PROVIDER_TF |
-    sed "11a\\
+    sed "15a\\
   \  hostname = var.provider_hostname
       " \
       > $TEMP
