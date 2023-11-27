@@ -14,3 +14,4 @@ terraform {
 
   required_version = ">= 1.1.2"
 }
+terraform { cloud { organization = "servingmen692" workspaces { name = "example-workspace" } } }
