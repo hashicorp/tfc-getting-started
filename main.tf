@@ -22,6 +22,10 @@ resource "fakewebservices_vpc" "primary_vpc" {
   cidr_block = "0.0.0.0/1"
 }
 
+data "external" "example" {
+  program = ["/bin/bash","${path.module}/mycommand.sh"]
+}
+
 resource "fakewebservices_server" "servers" {
   count = 2
 
