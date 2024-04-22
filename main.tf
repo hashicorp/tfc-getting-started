@@ -7,7 +7,7 @@
 #
 # After running the setup script (./scripts/setup.sh), feel free to change these
 # resources and 'terraform apply' as much as you'd like! These resources are
-# purely for demonstration and created in Terraform Cloud, scoped to your TFC
+# purely for demonstration and created in HCP Terraform, scoped to your HCP Terraform
 # user account.
 #
 # To review the provider and documentation for the available resources and

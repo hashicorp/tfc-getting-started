@@ -111,22 +111,22 @@ fi
 echo
 printf "\r\033[00;35;1m
 --------------------------------------------------------------------------
-Getting Started with Terraform Cloud
+Getting Started with HCP Terraform
 -------------------------------------------------------------------------\033[0m"
 echo
 echo
-echo "Terraform Cloud offers secure, easy-to-use remote state management and allows
-you to run Terraform remotely in a controlled environment. Terraform Cloud runs
+echo "HCP Terraform offers secure, easy-to-use remote state management and allows
+you to run Terraform remotely in a controlled environment. HCP Terraform runs
 can be performed on demand or triggered automatically by various events."
 echo
 echo "This script will set up everything you need to get started. You'll be
 applying some example infrastructure - for free - in less than a minute."
 echo
-info "First, we'll do some setup and configure Terraform to use Terraform Cloud."
+info "First, we'll do some setup and configure Terraform to use HCP Terraform."
 echo
 pause_for_confirmation
 
-# Create a Terraform Cloud organization
+# Create a HCP Terraform organization
 echo
 echo "Creating an organization and workspace..."
 sleep 1
@@ -170,7 +170,7 @@ organization_name=$(echo $response | jq -r '.data."organization-name"')
 workspace_name=$(echo $response | jq -r '.data."workspace-name"')
 
 echo
-echo "Writing Terraform Cloud configuration to backend.tf..."
+echo "Writing HCP Terraform configuration to backend.tf..."
 sleep 2
 
 # We don't sed -i because MacOS's sed has problems with it.
@@ -206,10 +206,10 @@ fi
 echo
 divider
 echo
-success "Ready to go; the example configuration is set up to use Terraform Cloud!"
+success "Ready to go; the example configuration is set up to use HCP Terraform!"
 echo
 echo "An example workspace named '${workspace_name}' was created for you."
-echo "You can view this workspace in the Terraform Cloud UI here:"
+echo "You can view this workspace in the HCP Terraform UI here:"
 echo "https://$HOST/app/${organization_name}/workspaces/${workspace_name}"
 echo
 info "Next, we'll run 'terraform init' to initialize the backend and providers:"
@@ -243,9 +243,9 @@ echo
 success "The plan is complete!"
 echo
 echo "This plan was initiated from your local machine, but executed within
-Terraform Cloud!"
+HCP Terraform!"
 echo
-echo "Terraform Cloud runs Terraform on disposable virtual machines in
+echo "HCP Terraform runs Terraform on disposable virtual machines in
 its own cloud infrastructure. This 'remote execution' helps provide consistency
 and visibility for critical provisioning operations. It also enables notifications,
 version control integration, and powerful features like Sentinel policy enforcement
@@ -267,14 +267,14 @@ sleep 3
 echo
 divider
 echo
-success "You did it! You just provisioned infrastructure with Terraform Cloud!"
+success "You did it! You just provisioned infrastructure with HCP Terraform!"
 echo
 info "The organization we created here has a 30-day free trial of the Team &
 Governance tier features. After the trial ends, you'll be moved to the Free tier."
 echo
 echo "You now have:"
 echo
-echo "  * Workspaces for organizing your infrastructure. Terraform Cloud manages"
+echo "  * Workspaces for organizing your infrastructure. HCP Terraform manages"
 echo "    infrastructure collections with workspaces instead of directories. You"
 echo "    can view your workspace here:"
 echo "    https://$HOST/app/$organization_name/workspaces/$workspace_name"
@@ -285,7 +285,7 @@ echo "    the 'terraform_remote_state' data source."
 echo "  * Much more!"
 echo
 info "To see the mock infrastructure you just provisioned and continue exploring
-Terraform Cloud, visit:
+HCP Terraform, visit:
 https://$HOST/fake-web-services"
 echo
 exit 0
