@@ -1,4 +1,4 @@
-# Copyright IBM Corp. 2020, 2024
+# Copyright IBM Corp. 2018, 2026
 # SPDX-License-Identifier: MPL-2.0
 
 # The block below configures Terraform to use the 'remote' backend with HCP Terraform.
